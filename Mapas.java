@@ -114,8 +114,7 @@ if(bifur>salas) {
 		}else if (bifur==0){
 			salasrestantes=salas-(bifur+ramificaciones);
 		}
-		bifurY=2;
-		bifurX=5;
+
 	}
 	private static void ramificaciones() {//hay un bug que cuando se pueda hay que solucionarlo
 		Scanner sc= new Scanner(System.in);
