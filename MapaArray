@@ -1,0 +1,467 @@
+private static int [][] matriz = new int[4][4];
+	static int dosConcetores = (int)(Math.random() *2+1);
+	static int tresConcetores = (int)(Math.random() *2+1);
+	static int cuatroConectores = (int)(Math.random()*3+1);
+	static int Conectores = (int)(Math.random()*5+1);
+	//HAY UN BUG MUY RARO DE QUE OCURRA QUE PUEDE HABER DOS PARTES INCONEXAS 
+	//ES DECIR QUE NO SE PUEDA LLEGAR DE UNA FORMA NATURAL
+	public static void main(String[]args) {
+		  matriz = generarMatriz();	     
+	        //Impirmir la matriz y cambiar los 0 por 2
+		  	imprimirMatriz(matriz);
+	        //Añadir los valores
+	        asignarValores(matriz);
+	        //Impirimir los valores cambiados
+	        imprimirMatriz(matriz);
+	        // Convertir y mostrar la representación visual
+	        MapaConvertido(matriz);
+	        }
+
+	private static int[][] generarMatriz() {
+	        // Rellenar la matriz con valores aleatorios entre 0 y 1
+	        Random random = new Random();
+	        for (int i = 0; i < matriz.length; i++) {
+	            for (int j = 0; j < matriz[i].length; j++) {
+	                if (j % 2 == 0 && (i == 0 || i == 2) || j % 2 != 0 && (i == 1 || i == 3)) {
+	                    matriz[i][j] = 1;
+	                } else {
+	                    matriz[i][j] = 0;
+	                }
+	            }
+	        }
+
+	        return matriz;
+	    }
+	 
+	private static void imprimirMatriz(int[][] matriz) {
+			// TODO Auto-generated method stub
+		System.out.println(" ");
+		 for (int i = 0; i < matriz.length; i++) {
+	            for (int j = 0; j < matriz[i].length; j++) {
+	                System.out.print(matriz[i][j] + " ");
+	            }
+	            System.out.println();  // Agrega un salto de línea después de cada fila
+	        }
+		}
+	
+	private static void asignarValores(int[][] matriz) {
+	    for (int i = 0; i < matriz.length; i++) {
+	        for (int j = 0; j < matriz[i].length; j++) {
+	            if (matriz[i][j] == 0) {
+	                int cantidadUnos = contarUnosAlrededor(matriz, i, j);
+	                matriz[i][j] = 2 + cantidadUnos;
+
+	                // Restamos la cantidad de unos al valor calculado para evitar la acumulación
+	                matriz[i][j] -= (matriz[i][j] == 2) ? cantidadUnos : 0;
+	            }
+	        }
+	    }
+	}
+
+	private static int contarUnosAlrededor(int[][] matriz, int fila, int columna) {
+	    int cantidadUnos = 0;
+
+	    for (int i = fila - 1; i <= fila + 1; i++) {
+	        for (int j = columna - 1; j <= columna + 1; j++) {
+	            if (i >= 0 && i < matriz.length && j >= 0 && j < matriz[i].length && !(i == fila && j == columna)) {
+	                cantidadUnos += (matriz[i][j] == 1) ? 1 : 0;
+	            }
+	        }
+	    }
+
+	    return cantidadUnos;
+	}
+    	    
+	private static void MapaConvertido(int[][] matriz) {
+        	  for (int i = 0; i < matriz.length; i++) {//Recorre las columnas
+  				dosConcetores = (int)(Math.random() *2+1);
+  				tresConcetores = (int)(Math.random() *2+1);
+  				cuatroConectores = (int)(Math.random()*3+1);
+				Conectores = (int)(Math.random()*5+1);
+        		  for (int n=0;n<3;n++) {//Altura de las zonas (3 de alto)
+        			  
+		            for (int j = 0; j < matriz[i].length; j++) {//Recorre las filas
+		            	SwitchDibujo(i, j, n);       
+		            }
+		            System.out.println(); 
+        		  }
+		        }
+		    }
+ 
+	private static void SwitchDibujo(int i, int j, int n) {
+			switch (matriz[i][j]){
+				case 0:
+					salaVacia();
+					break;
+				case 1:
+					habitación();
+					break;
+				case 3:
+					salaVacia();
+					break;
+				case 4: 		
+					SwitchCase4(i , j , n);			
+					break;
+				case 5:				
+					SwitchCase5(i , j , n);
+					break;
+				case 6:
+					SwitchCase6(i , j , n);
+					break;	
+		}			  
+		
+	}
+		
+	private static void SwitchCase4(int i, int j, int n) {
+		if((Math.min(i, i)==0||Math.max(i, 0)==i)&&(Math.min(j, j)==0||Math.max(j, 0)==j)) {
+			switch(i+j) {
+			case 0:
+				pasillo4(n);
+			case 3:
+				if(j==3) {
+				pasillo3(n);
+				}else {
+				pasillo5(n);
+				}
+				break;
+			case 6:
+				pasillo6(n);
+				break;
+			}
+		}else {
+			if((Math.min(i, 1)!=0||Math.max(i, 0)!=i)&&(Math.min(j, i)!=0||Math.max(j, 0)!=j)) {
+				if(((Math.max(i, 0)!=i)&&(Math.min(j, 1)!=0)||(Math.max(i, 1)!=0)&&(Math.min(j, 0)!=j))) {
+					pasillo(n);
+				}else {
+					pasillo2(n);
+				}
+				
+			}
+			
+		}
+	}
+
+	private static void SwitchCase5(int i, int j, int n) {//Revisar dosConectores
+		//System.out.print(tresConcetores);
+		switch (tresConcetores) {
+			case 1://Desision de los pasillos maximos posible segun la posición
+				if((Math.min(i, 0)==0||Math.max(i, 0)==i)&&(Math.min(j, 0)==0||Math.max(j, 0)==j)) {
+					if(i==0) {
+						pasillo7(n);
+					}else if(i==3) {
+						pasillo8(n);
+					}else if(j==0) {
+						pasillo9(n);
+					}else if(j==3) {
+						pasillo10(n);
+					}					
+				}
+				break;
+			case 2://CAMBIAR MAS ADELANTE PARA MAYOR RAMIFICACION
+				//Desision de pasillos minima requerida dependiendo de su posición
+				//System.out.print(dosConcetores);
+				if(((Math.min(i, 0)==0||Math.max(i, 0)==i)&&(Math.min(j, 0)==0||Math.max(j, 0)==j))) {
+					if(i==0&&j!=3) {
+						switch(dosConcetores) {//PARTE DE CONECTORES DE LA PARTE DE ARRIBA
+						case 1:
+							pasillo2(n);
+							break;
+						case 2:
+							if(i==0) {
+								pasillo3(n);
+							}else {
+								pasillo5(n);
+							}
+							break;
+						}
+					}else if(i!=0&&j==0) {//PARTE DE CONECTORES DE LA PARTE IZQUIERDA 
+						switch(dosConcetores) {
+						case 1:
+							pasillo5(n);
+							break;
+						case 2: 
+							pasillo4(n);
+							break;
+						}
+					}else if(j==3){//PARTE DE CONECTORES DE LA PARTE DERECHA
+						switch(dosConcetores) {
+						case 1:
+							pasillo3(n);
+							break;
+						case 2: 
+							pasillo6(n);
+							break;
+						}
+						
+					}else if(i==3){//PARTE DE CONECTORES DE LA PARTE DE ABAJO
+						switch(dosConcetores) {
+						case 1:
+							pasillo6(n);
+							break;
+						case 2: 
+							pasillo5(n);
+							break;
+						}
+					}
+				} 
+			break;
+			
+		}
+	}
+	
+	private static void SwitchCase6(int i, int j, int n) {
+		// TODO Auto-generated method stub
+		switch(cuatroConectores) {
+			case 1://CautroConectores
+				pasillo11(n);
+				break;
+			case 2://TresConectores
+					switch(Conectores) {
+					case 1:
+						pasillo10(n);
+						break;
+					case 2:
+						pasillo9(n);
+						break;
+					case 3:
+						pasillo8(n);
+						break;
+					case 4:
+						pasillo7(n);
+						break;
+					case 5:
+						pasillo(n);
+						break;						
+					}				
+				break;
+			case 3://DosConectores
+				switch(Conectores) {
+				case 1:
+					pasillo6(n);
+					break;
+				case 2:
+					pasillo5(n);
+					break;
+				case 3:
+					pasillo4(n);
+					break;
+				case 4:
+					pasillo3(n);
+					break;
+				case 5:
+					pasillo2(n);
+					break;
+					
+				}
+				break;		
+		}
+	}
+
+	private static void salaVacia() {
+		// TODO Auto-generated method stub
+		for (int i=0;i<3;i++) {
+			System.out.print(" ");
+			}
+
+	}
+
+	private static void habitación() {
+		/*	 (*,*,*)
+		 * ->(*,*,*)
+		 	 (*,*,*)
+		*/
+		for (int i=0;i<3;i++) {
+		System.out.print("*");
+		}
+	}
+
+	private static void pasillo2(int n) {
+		/*	 ( , , )
+		 * ->(#,#,#)
+		 	 ( , , )
+		*/
+		for (int i=0;i<3;i++) {
+			if (n==1) {
+				System.out.print("#");
+			}else{
+				System.out.print(" ");
+			}
+		}
+	}
+
+	private static void pasillo(int n){
+		/*	 ( ,#, )
+		 * ->( ,#, )
+		 	 ( ,#, )
+		*/
+		for (int i=0;i<3;i++) {
+			if (n==1&&i==1) {
+				System.out.print("#");
+			}else if (n==0&&i==1) {
+				System.out.print("#");
+			}else if (n==2&&i==1) {
+				System.out.print("#");
+			}else{
+				System.out.print(" ");
+			}
+		}
+	}
+	
+	private static void pasillo3(int n) {
+		/*	 ( , , )
+		 * ->(#,#, )
+		 	 ( ,#, )
+		*/
+		for (int i=0;i<3;i++) {
+			if (n==1&&i!=2) {
+				System.out.print("#");
+			}else if (n==2&&i==1) {
+				System.out.print("#");
+			}else {
+				System.out.print(" ");
+			}
+		}
+		
+	}
+
+	private static void pasillo4(int n) {
+		// TODO Auto-generated method stub
+		/*	 ( , , )
+		 * ->( ,#,#)
+		 	 ( ,#, )
+		*/
+		for (int i=0;i<3;i++) {
+			if (n==1&&i!=0) {
+				System.out.print("#");
+			}else if (n==2&&i==1) {
+				System.out.print("#");
+			}else {
+				System.out.print(" ");
+			}
+		}
+		
+	}
+	
+	private static void pasillo5(int n) {
+		// TODO Auto-generated method stub
+		/*	 ( ,#, )
+		 * ->( ,#,#)
+		 	 ( , , )
+		*/
+		for (int i=0;i<3;i++) {
+			if (n==1&&i!=0) {
+				System.out.print("#");
+			}else if (n==0&&i==1) {
+				System.out.print("#");
+			}else {
+				System.out.print(" ");
+			}
+		}
+	}
+
+	private static void pasillo6(int n) {
+		// TODO Auto-generated method stub
+		/*	 ( ,#, )
+		 * ->(#,#, )
+		 	 ( , , )
+		*/
+		for (int i=0;i<3;i++) {
+			if (n==1&&i!=2) {
+				System.out.print("#");
+			}else if (n==0&&i==1) {
+				System.out.print("#");
+			}else {
+				System.out.print(" ");
+			}
+		}
+	}
+	
+	private static void pasillo7(int n) {
+		// TODO Auto-generated method stub
+		/*	 ( , , )
+		 * ->(#,#,#)
+		 	 ( ,#, )
+		*/
+		for (int i=0;i<3;i++) {
+			if (n==1) {
+				System.out.print("#");
+			}else if(i==1&&n==2) {
+				System.out.print("#");
+			}else {
+				System.out.print(" ");
+			}
+		}
+	}
+	
+	private static void pasillo8(int n) {
+		// TODO Auto-generated method stub
+		/*	 ( ,#, )
+		 * ->(#,#,#)
+		 	 ( , , )
+		*/
+		for (int i=0;i<3;i++) {
+			if (n==1) {
+				System.out.print("#");
+			}else if(i==1&&n==0) {
+				System.out.print("#");
+			}else {
+				System.out.print(" ");
+			}
+		}
+	}
+
+	private static void pasillo9(int n) {
+		/*	 ( ,#, )
+		 * ->( ,#,#)
+		 	 ( ,#, )
+		*/
+		for (int i=0;i<3;i++) {
+			if (n==1&&i!=0) {
+				System.out.print("#");
+			}else if(i==1&&n==0){
+				System.out.print("#");
+			}else if (i==1&&n==2){
+				System.out.print("#");
+			}else {
+				System.out.print(" ");
+
+			}
+		}
+	}
+	
+	private static void pasillo10(int n) {
+		/*	 ( ,#, )
+		 * ->(#,#, )
+		 	 ( ,#, )
+		*/	  
+		for (int i=0;i<3;i++) {
+			if (n==1&&i!=2) {
+				System.out.print("#");
+			}else if(i==1&&n==0){
+				System.out.print("#");
+			}else if (i==1&&n==2){
+				System.out.print("#");
+			}else {
+				System.out.print(" ");
+
+			}
+		}
+	}
+	
+	private static void pasillo11(int n) {
+/*	 ( ,#, )
+ * ->(#,#,#)
+ 	 ( ,#, )
+*/	  
+		for (int i=0;i<3;i++) {
+			if (n==1) {
+				System.out.print("#");
+			}else if(i==1){
+				System.out.print("#");
+			}else {
+				System.out.print(" ");
+			}
+		}
+	}
+	
+}
